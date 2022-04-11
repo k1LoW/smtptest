@@ -51,3 +51,7 @@ func TestServer(t *testing.T) {
 	}
 }
 ```
+
+## References
+
+- https://github.com/influxdata/kapacitor/tree/master/services/smtp/smtptest
