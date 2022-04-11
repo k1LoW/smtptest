@@ -1,6 +1,7 @@
 package smtptest
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"net/mail"
@@ -133,6 +134,10 @@ func NewServer() (*Server, error) {
 	}()
 
 	return s, nil
+}
+
+func (s *Server) Addr() string {
+	return fmt.Sprintf("%s:%d", s.Host, s.Port)
 }
 
 func (s *Server) Sessions() []*Session {

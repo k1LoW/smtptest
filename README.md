@@ -26,7 +26,7 @@ func TestServer(t *testing.T) {
 		ts.Close()
 	})
 
-	addr := fmt.Sprintf("%s:%d", ts.Host, ts.Port)
+	addr := ts.Addr()
 
 	// ref: https://github.com/emersion/go-smtp#client
 	auth := sasl.NewPlainClient("", "user@example.com", "password")
