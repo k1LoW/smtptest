@@ -17,16 +17,8 @@ type Backend struct {
 	sessions []*Session
 }
 
-func (be *Backend) Login(state *smtp.ConnectionState, username, password string) (smtp.Session, error) {
-	return be.newSession(state)
-}
-
-func (be *Backend) AnonymousLogin(state *smtp.ConnectionState) (smtp.Session, error) {
-	return be.newSession(state)
-}
-
-func (be *Backend) newSession(state *smtp.ConnectionState) (smtp.Session, error) {
-	ses := &Session{state: state}
+func (be *Backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
+	ses := &Session{state: &state}
 	be.sessions = append(be.sessions, ses)
 	return ses, nil
 }
@@ -38,7 +30,17 @@ type Session struct {
 	state *smtp.ConnectionState
 }
 
-func (s *Session) Mail(from string, opts smtp.MailOptions) error {
+func (s *Session) Reset() {}
+
+func (s *Session) Logout() error {
+	return nil
+}
+
+func (s *Session) AuthPlain(username, password string) error {
+	return nil
+}
+
+func (s *Session) Mail(from string, opts *smtp.MailOptions) error {
 	s.from = from
 	return nil
 }
@@ -54,12 +56,6 @@ func (s *Session) Data(r io.Reader) error {
 		return err
 	}
 	s.msg = msg
-	return nil
-}
-
-func (s *Session) Reset() {}
-
-func (s *Session) Logout() error {
 	return nil
 }
 
@@ -86,7 +82,10 @@ type Server struct {
 }
 
 func NewServer() (*Server, error) {
-	be := &Backend{}
+	return newServer(&Backend{})
+}
+
+func newServer(be *Backend) (*Server, error) {
 	s := &Server{
 		server:  smtp.NewServer(be),
 		backend: be,
