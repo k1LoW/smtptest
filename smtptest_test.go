@@ -1,12 +1,14 @@
 package smtptest
 
 import (
-	"strings"
+	"net/smtp"
 	"testing"
-
-	"github.com/emersion/go-sasl"
-	"github.com/emersion/go-smtp"
 )
+
+const testMsg = "To: recipient@example.net\r\n" +
+	"Subject: discount Gophers!\r\n" +
+	"\r\n" +
+	"This is the email body.\r\n"
 
 func TestServer(t *testing.T) {
 	ts, err := NewServer()
@@ -18,15 +20,8 @@ func TestServer(t *testing.T) {
 	})
 
 	addr := ts.Addr()
-
-	// ref: https://github.com/emersion/go-smtp#client
-	auth := sasl.NewPlainClient("", "user@example.com", "password")
-	to := []string{"recipient@example.net"}
-	msg := strings.NewReader("To: recipient@example.net\r\n" +
-		"Subject: discount Gophers!\r\n" +
-		"\r\n" +
-		"This is the email body.\r\n")
-	if err := smtp.SendMail(addr, auth, "sender@example.org", to, msg); err != nil {
+	auth := smtp.PlainAuth("", "user@example.com", "password", ts.Host)
+	if err := smtp.SendMail(addr, auth, "sender@example.org", []string{"recipient@example.net"}, []byte(testMsg)); err != nil {
 		t.Fatal(err)
 	}
 
