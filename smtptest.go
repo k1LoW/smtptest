@@ -182,10 +182,7 @@ func (s *Server) Messages() []*mail.Message {
 	return msgs
 }
 
-func (s *Server) Close() error {
-	if err := s.server.Close(); err != nil {
-		return err
-	}
+func (s *Server) Close() {
+	_ = s.server.Close()
 	s.wg.Wait()
-	return nil
 }

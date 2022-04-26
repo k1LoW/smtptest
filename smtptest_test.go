@@ -54,7 +54,7 @@ func TestServerWithAuth(t *testing.T) {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
-		_ = ts.Close()
+		ts.Close()
 	})
 	addr := ts.Addr()
 
