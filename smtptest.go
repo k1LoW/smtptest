@@ -1,33 +1,44 @@
 package smtptest
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net"
 	"net/mail"
+	netsmtp "net/smtp"
 	"strconv"
 	"sync"
 	"time"
 
 	"github.com/emersion/go-smtp"
+	"github.com/google/uuid"
 	"github.com/hashicorp/go-multierror"
 )
 
 type Backend struct {
+	username *string
+	password *string
 	sessions []*Session
 }
 
 func (be *Backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
-	ses := &Session{state: &state}
+	ses := &Session{
+		state:    &state,
+		username: be.username,
+		password: be.password,
+	}
 	be.sessions = append(be.sessions, ses)
 	return ses, nil
 }
 
 type Session struct {
-	from  string
-	to    string
-	msg   *mail.Message
-	state *smtp.ConnectionState
+	from     string
+	to       string
+	msg      *mail.Message
+	state    *smtp.ConnectionState
+	username *string
+	password *string
 }
 
 func (s *Session) Reset() {}
@@ -37,6 +48,9 @@ func (s *Session) Logout() error {
 }
 
 func (s *Session) AuthPlain(username, password string) error {
+	if s.username != nil && s.password != nil && (*s.username != username || *s.password != password) {
+		return errors.New("invalid username or password")
+	}
 	return nil
 }
 
@@ -83,6 +97,20 @@ type Server struct {
 
 func NewServer() (*Server, error) {
 	return newServer(&Backend{})
+}
+
+func NewServerWithAuth() (*Server, netsmtp.Auth, error) {
+	username := fmt.Sprintf("%s@example.com", uuid.NewString())
+	password := uuid.NewString()
+	s, err := newServer(&Backend{
+		username: &username,
+		password: &password,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+	auth := netsmtp.PlainAuth("", username, password, s.Host)
+	return s, auth, nil
 }
 
 func newServer(be *Backend) (*Server, error) {
