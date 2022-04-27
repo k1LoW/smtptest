@@ -16,13 +16,13 @@ import (
 	"github.com/k1LoW/smtptest"
 )
 
-const testMsg = "To: recipient@example.net\r\n" +
-	"Subject: discount Gophers!\r\n" +
+const testMsg = "To: alice@example.net\r\n" +
+	"Subject: Hello Gophers!\r\n" +
 	"\r\n" +
 	"This is the email body.\r\n"
 
-func TestServer(t *testing.T) {
-	ts, err := smtptest.NewServer()
+func TestSendMail(t *testing.T) {
+	ts, auth, err := smtptest.NewServerWithAuth()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,8 +31,7 @@ func TestServer(t *testing.T) {
 	})
 
 	addr := ts.Addr()
-	auth := smtp.PlainAuth("", "user@example.com", "password", ts.Host)
-	if err := smtp.SendMail(addr, auth, "sender@example.org", []string{"recipient@example.net"}, []byte(testMsg)); err != nil {
+	if err := smtp.SendMail(addr, auth, "sender@example.org", []string{"alice@example.net"}, []byte(testMsg)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -42,7 +41,7 @@ func TestServer(t *testing.T) {
 	msgs := ts.Messages()
 
 	got := msgs[0].Header.Get("To")
-	want := "recipient@example.net"
+	want := "alice@example.net"
 	if got != want {
 		t.Errorf("got %v\nwant %v", got, want)
 	}
