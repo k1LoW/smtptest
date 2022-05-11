@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.5.0](https://github.com/k1LoW/smtptest/compare/v0.4.0...v0.5.0) (2022-05-11)
+
+* Make private [#6](https://github.com/k1LoW/smtptest/pull/6) ([k1LoW](https://github.com/k1LoW))
+* Add Server.RawMessages() [#5](https://github.com/k1LoW/smtptest/pull/5) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.4.0](https://github.com/k1LoW/smtptest/compare/v0.3.0...v0.4.0) (2022-04-26)
 
 * [BREKING] Make Close() interface the same as that of httptest [#4](https://github.com/k1LoW/smtptest/pull/4) ([k1LoW](https://github.com/k1LoW))
