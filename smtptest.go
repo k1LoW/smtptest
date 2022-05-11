@@ -1,6 +1,7 @@
 package smtptest
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -35,6 +36,7 @@ func (be *Backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Sessio
 type Session struct {
 	from     string
 	to       string
+	rawMsg   io.Reader
 	msg      *mail.Message
 	state    *smtp.ConnectionState
 	username *string
@@ -65,11 +67,14 @@ func (s *Session) Rcpt(to string) error {
 }
 
 func (s *Session) Data(r io.Reader) error {
-	msg, err := mail.ReadMessage(r)
+	b := new(bytes.Buffer)
+	a := io.TeeReader(r, b)
+	msg, err := mail.ReadMessage(a)
 	if err != nil {
 		return err
 	}
 	s.msg = msg
+	s.rawMsg = b
 	return nil
 }
 
@@ -83,6 +88,10 @@ func (s *Session) To() string {
 
 func (s *Session) Message() *mail.Message {
 	return s.msg
+}
+
+func (s *Session) RawMessage() io.Reader {
+	return s.rawMsg
 }
 
 type Server struct {
@@ -180,6 +189,14 @@ func (s *Server) Messages() []*mail.Message {
 		msgs = append(msgs, ses.msg)
 	}
 	return msgs
+}
+
+func (s *Server) RawMessages() []io.Reader {
+	raws := []io.Reader{}
+	for _, ses := range s.backend.sessions {
+		raws = append(raws, ses.rawMsg)
+	}
+	return raws
 }
 
 func (s *Server) Close() {
