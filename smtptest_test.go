@@ -2,7 +2,10 @@ package smtptest
 
 import (
 	"net/smtp"
+	"strings"
 	"testing"
+
+	"github.com/jhillyerd/enmime"
 )
 
 const testMsg = "To: recipient@example.net\r\n" +
@@ -30,6 +33,7 @@ func TestServer(t *testing.T) {
 	}
 	sessions := ts.Sessions()
 	msgs := ts.Messages()
+	raws := ts.RawMessages()
 
 	{
 		got := sessions[0].From()
@@ -44,6 +48,16 @@ func TestServer(t *testing.T) {
 		want := "recipient@example.net"
 		if got != want {
 			t.Errorf("got %v\nwant %v", got, want)
+		}
+	}
+
+	{
+		e, err := enmime.ReadEnvelope(raws[0])
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !strings.Contains(e.Text, "This is the email body.") {
+			t.Errorf("got %v\n", e.Text)
 		}
 	}
 }
