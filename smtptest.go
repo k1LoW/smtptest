@@ -17,13 +17,13 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
-type Backend struct {
+type backend struct {
 	username *string
 	password *string
 	sessions []*Session
 }
 
-func (be *Backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
+func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
 	ses := &Session{
 		state:    &state,
 		username: be.username,
@@ -100,18 +100,18 @@ type Server struct {
 	Err  error
 
 	server  *smtp.Server
-	backend *Backend
+	backend *backend
 	wg      sync.WaitGroup
 }
 
 func NewServer() (*Server, error) {
-	return newServer(&Backend{})
+	return newServer(&backend{})
 }
 
 func NewServerWithAuth() (*Server, netsmtp.Auth, error) {
 	username := fmt.Sprintf("%s@example.com", uuid.NewString())
 	password := uuid.NewString()
-	s, err := newServer(&Backend{
+	s, err := newServer(&backend{
 		username: &username,
 		password: &password,
 	})
@@ -122,7 +122,7 @@ func NewServerWithAuth() (*Server, netsmtp.Auth, error) {
 	return s, auth, nil
 }
 
-func newServer(be *Backend) (*Server, error) {
+func newServer(be *backend) (*Server, error) {
 	s := &Server{
 		server:  smtp.NewServer(be),
 		backend: be,
