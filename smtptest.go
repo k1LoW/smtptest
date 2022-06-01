@@ -21,6 +21,7 @@ type backend struct {
 	username *string
 	password *string
 	sessions []*Session
+	mu       sync.RWMutex
 }
 
 func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
@@ -29,7 +30,9 @@ func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Sessio
 		username: be.username,
 		password: be.password,
 	}
+	be.mu.Lock()
 	be.sessions = append(be.sessions, ses)
+	be.mu.Unlock()
 	return ses, nil
 }
 
@@ -41,6 +44,7 @@ type Session struct {
 	state    *smtp.ConnectionState
 	username *string
 	password *string
+	mu       sync.RWMutex
 }
 
 func (s *Session) Reset() {}
@@ -67,6 +71,8 @@ func (s *Session) Rcpt(to string) error {
 }
 
 func (s *Session) Data(r io.Reader) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	b := new(bytes.Buffer)
 	a := io.TeeReader(r, b)
 	msg, err := mail.ReadMessage(a)
@@ -177,24 +183,35 @@ func (s *Server) Addr() string {
 }
 
 func (s *Server) Sessions() []*Session {
+	s.backend.mu.RLock()
+	defer s.backend.mu.RUnlock()
 	return s.backend.sessions
 }
 
 func (s *Server) Messages() []*mail.Message {
 	msgs := []*mail.Message{}
+	s.backend.mu.RLock()
+	defer s.backend.mu.RUnlock()
 	for _, ses := range s.backend.sessions {
+		ses.mu.RLock()
 		if ses.msg == nil {
+			ses.mu.RUnlock()
 			continue
 		}
 		msgs = append(msgs, ses.msg)
+		ses.mu.RUnlock()
 	}
 	return msgs
 }
 
 func (s *Server) RawMessages() []io.Reader {
 	raws := []io.Reader{}
+	s.backend.mu.RLock()
+	defer s.backend.mu.RUnlock()
 	for _, ses := range s.backend.sessions {
+		ses.mu.RLock()
 		raws = append(raws, ses.rawMsg)
+		ses.mu.RUnlock()
 	}
 	return raws
 }
