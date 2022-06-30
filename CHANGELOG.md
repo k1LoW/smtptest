@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.5.2](https://github.com/k1LoW/smtptest/compare/v0.5.1...v0.5.2) (2022-06-30)
+
+* Fix RawMessages() [#8](https://github.com/k1LoW/smtptest/pull/8) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.5.1](https://github.com/k1LoW/smtptest/compare/v0.5.0...v0.5.1) (2022-06-01)
 
 * Fix race [#7](https://github.com/k1LoW/smtptest/pull/7) ([k1LoW](https://github.com/k1LoW))
