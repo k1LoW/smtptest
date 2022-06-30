@@ -210,6 +210,10 @@ func (s *Server) RawMessages() []io.Reader {
 	defer s.backend.mu.RUnlock()
 	for _, ses := range s.backend.sessions {
 		ses.mu.RLock()
+		if ses.rawMsg == nil {
+			ses.mu.RUnlock()
+			continue
+		}
 		raws = append(raws, ses.rawMsg)
 		ses.mu.RUnlock()
 	}
