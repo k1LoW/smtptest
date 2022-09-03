@@ -1,4 +1,4 @@
-# smtptest
+# smtptest [![build](https://github.com/k1LoW/smtptest/actions/workflows/ci.yml/badge.svg)](https://github.com/k1LoW/smtptest/actions/workflows/ci.yml) ![Coverage](https://raw.githubusercontent.com/k1LoW/octocovs/main/badges/k1LoW/smtptest/coverage.svg) ![Code to Test Ratio](https://raw.githubusercontent.com/k1LoW/octocovs/main/badges/k1LoW/smtptest/ratio.svg) ![Test Execution Time](https://raw.githubusercontent.com/k1LoW/octocovs/main/badges/k1LoW/smtptest/time.svg)
 
 `smtptest` provides SMTP server for testing.
 
