@@ -2,6 +2,7 @@ package smtptest
 
 import (
 	"net/smtp"
+	"sort"
 	"strings"
 	"testing"
 
@@ -100,6 +101,47 @@ func TestServerWithAuth(t *testing.T) {
 			t.Errorf("got %v\nwant %v", len(msgs), 1)
 		}
 		got := msgs[0].Header.Get("To")
+		want := "recipient@example.net"
+		if got != want {
+			t.Errorf("got %v\nwant %v", got, want)
+		}
+	}
+}
+
+func TestServerMultipleRecipients(t *testing.T) {
+	ts, err := NewServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		ts.Close()
+	})
+
+	addr := ts.Addr()
+	auth := smtp.PlainAuth("", "user@example.com", "password", ts.Host)
+	if err := smtp.SendMail(addr, auth, "sender@example.org", []string{"recipient@example.net", "another_recipient@example.net"}, []byte(testMsg)); err != nil {
+		t.Fatal(err)
+	}
+
+	sessions := ts.Sessions()
+	if len(sessions) != 1 {
+		t.Errorf("got %v\nwant %v", len(sessions), 1)
+	}
+
+	recipients := sessions[0].Recipients()
+	if len(recipients) != 2 {
+		t.Errorf("got %v\nwant %v", len(recipients), 2)
+	}
+	sort.Strings(recipients)
+	{
+		got := recipients[0]
+		want := "another_recipient@example.net"
+		if got != want {
+			t.Errorf("got %v\nwant %v", got, want)
+		}
+	}
+	{
+		got := recipients[1]
 		want := "recipient@example.net"
 		if got != want {
 			t.Errorf("got %v\nwant %v", got, want)
