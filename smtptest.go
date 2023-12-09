@@ -37,14 +37,15 @@ func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Sessio
 }
 
 type Session struct {
-	from     string
-	to       string
-	rawMsg   io.Reader
-	msg      *mail.Message
-	state    *smtp.ConnectionState
-	username *string
-	password *string
-	mu       sync.RWMutex
+	from       string
+	to         string
+	recipients []string
+	rawMsg     io.Reader
+	msg        *mail.Message
+	state      *smtp.ConnectionState
+	username   *string
+	password   *string
+	mu         sync.RWMutex
 }
 
 func (s *Session) Reset() {}
@@ -67,6 +68,7 @@ func (s *Session) Mail(from string, opts *smtp.MailOptions) error {
 
 func (s *Session) Rcpt(to string) error {
 	s.to = to
+	s.recipients = append(s.recipients, to)
 	return nil
 }
 
@@ -88,8 +90,15 @@ func (s *Session) From() string {
 	return s.from
 }
 
+// Deprecated: use Recipients instead to retrieve all recipients.
 func (s *Session) To() string {
 	return s.to
+}
+
+func (s *Session) Recipients() []string {
+	recipients := make([]string, len(s.recipients))
+	copy(recipients, s.recipients)
+	return recipients
 }
 
 func (s *Session) Message() *mail.Message {
