@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.7.0](https://github.com/k1LoW/smtptest/compare/v0.6.0...v0.7.0) (2023-12-09)
+
+* Support Multiple Recipients [#12](https://github.com/k1LoW/smtptest/pull/12) ([qawatake](https://github.com/qawatake))
+* Bump golang.org/x/net from 0.7.0 to 0.17.0 [#11](https://github.com/k1LoW/smtptest/pull/11) ([dependabot[bot]](https://github.com/apps/dependabot))
+* Bump golang.org/x/net from 0.0.0-20210501142056-aec3718b3fa0 to 0.7.0 [#10](https://github.com/k1LoW/smtptest/pull/10) ([dependabot[bot]](https://github.com/apps/dependabot))
+* Bump golang.org/x/text from 0.3.6 to 0.3.8 [#9](https://github.com/k1LoW/smtptest/pull/9) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v0.6.0](https://github.com/k1LoW/smtptest/compare/v0.5.2...v0.6.0) (2022-12-02)
 
 
