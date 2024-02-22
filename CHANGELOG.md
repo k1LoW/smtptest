@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.8.0](https://github.com/k1LoW/smtptest/compare/v0.7.0...v0.8.0) (2024-02-22)
+
+* Add OnReceive to register a function that fires when email is received [#14](https://github.com/k1LoW/smtptest/pull/14) ([k1LoW](https://github.com/k1LoW))
+* Use errors.Join [#13](https://github.com/k1LoW/smtptest/pull/13) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.7.0](https://github.com/k1LoW/smtptest/compare/v0.6.0...v0.7.0) (2023-12-09)
 
 * Support Multiple Recipients [#12](https://github.com/k1LoW/smtptest/pull/12) ([qawatake](https://github.com/qawatake))
