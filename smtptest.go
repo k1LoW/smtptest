@@ -16,11 +16,14 @@ import (
 	"github.com/google/uuid"
 )
 
+type onReceiveFunc func(from, to string, recipients []string, msg *mail.Message) error
+
 type backend struct {
-	username *string
-	password *string
-	sessions []*Session
-	mu       sync.RWMutex
+	username       *string
+	password       *string
+	sessions       []*Session
+	mu             sync.RWMutex
+	onReceiveFuncs []onReceiveFunc
 }
 
 func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
@@ -28,6 +31,7 @@ func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Sessio
 		state:    &state,
 		username: be.username,
 		password: be.password,
+		be:       be,
 	}
 	be.mu.Lock()
 	be.sessions = append(be.sessions, ses)
@@ -44,6 +48,7 @@ type Session struct {
 	state      *smtp.ConnectionState
 	username   *string
 	password   *string
+	be         *backend
 	mu         sync.RWMutex
 }
 
@@ -82,6 +87,15 @@ func (s *Session) Data(r io.Reader) error {
 	}
 	s.msg = msg
 	s.rawMsg = b
+	for _, fn := range s.be.onReceiveFuncs {
+		msg, err := mail.ReadMessage(bytes.NewReader(b.Bytes()))
+		if err != nil {
+			return err
+		}
+		if err := fn(s.From(), s.To(), s.Recipients(), msg); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -226,6 +240,10 @@ func (s *Server) RawMessages() []io.Reader {
 		ses.mu.RUnlock()
 	}
 	return raws
+}
+
+func (s *Server) OnReceive(fn func(from, to string, recipients []string, msg *mail.Message) error) {
+	s.backend.onReceiveFuncs = append(s.backend.onReceiveFuncs, fn)
 }
 
 func (s *Server) Close() {

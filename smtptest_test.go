@@ -1,6 +1,7 @@
 package smtptest
 
 import (
+	"net/mail"
 	"net/smtp"
 	"sort"
 	"strings"
@@ -21,6 +22,23 @@ func TestServer(t *testing.T) {
 	}
 	t.Cleanup(func() {
 		ts.Close()
+	})
+	ts.OnReceive(func(from, to string, recipients []string, msg *mail.Message) error {
+		{
+			got := from
+			want := "sender@example.org"
+			if got != want {
+				t.Errorf("got %v\nwant %v", got, want)
+			}
+		}
+		{
+			got := msg.Header.Get("To")
+			want := "recipient@example.net"
+			if got != want {
+				t.Errorf("got %v\nwant %v", got, want)
+			}
+		}
+		return nil
 	})
 
 	addr := ts.Addr()
