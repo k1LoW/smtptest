@@ -14,7 +14,6 @@ import (
 
 	"github.com/emersion/go-smtp"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-multierror"
 )
 
 type backend struct {
@@ -180,7 +179,7 @@ func newServer(be *backend) (*Server, error) {
 	go func() {
 		defer s.wg.Done()
 		if err := s.server.Serve(l); err != nil {
-			s.Err = multierror.Append(s.Err, err)
+			s.Err = errors.Join(s.Err, err)
 		}
 	}()
 
