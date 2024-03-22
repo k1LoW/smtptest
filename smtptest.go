@@ -163,10 +163,8 @@ func newServer(be *backend) (*Server, error) {
 
 	s.server.Addr = laddr.String()
 	s.server.Domain = "localhost"
-	s.server.ReadTimeout = 10 * time.Second
-	s.server.WriteTimeout = 10 * time.Second
-	s.server.MaxMessageBytes = 1024 * 1024
-	s.server.MaxRecipients = 50
+	s.server.ReadTimeout = 60 * time.Second
+	s.server.WriteTimeout = 60 * time.Second
 	s.server.AllowInsecureAuth = true
 
 	network := "tcp"
