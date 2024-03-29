@@ -148,8 +148,31 @@ type Server struct {
 	wg      sync.WaitGroup
 }
 
-func NewServer() (*Server, error) {
-	return newServer(&backend{})
+type Option func(*backend) error
+
+func WithPlainAuth(username, password string) Option {
+	return func(be *backend) error {
+		be.username = &username
+		be.password = &password
+		return nil
+	}
+}
+
+func WithOnReceiveFunc(fn onReceiveFunc) Option {
+	return func(be *backend) error {
+		be.onReceiveFuncs = append(be.onReceiveFuncs, fn)
+		return nil
+	}
+}
+
+func NewServer(opts ...Option) (*Server, error) {
+	be := &backend{}
+	for _, opt := range opts {
+		if err := opt(be); err != nil {
+			return nil, err
+		}
+	}
+	return newServer(be)
 }
 
 func NewServerWithAuth() (*Server, netsmtp.Auth, error) {
@@ -256,6 +279,7 @@ func (s *Server) RawMessages() []io.Reader {
 	return raws
 }
 
+// Deprecated
 func (s *Server) OnReceive(fn func(from, to string, recipients []string, msg *mail.Message) error) {
 	s.backend.onReceiveFuncs = append(s.backend.onReceiveFuncs, fn)
 }
