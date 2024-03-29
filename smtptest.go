@@ -95,16 +95,18 @@ func (s *Session) Rcpt(to string, opts *smtp.RcptOptions) error {
 func (s *Session) Data(r io.Reader) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	b := new(bytes.Buffer)
-	a := io.TeeReader(r, b)
-	msg, err := mail.ReadMessage(a)
+	b, err := io.ReadAll(r)
+	if err != nil {
+		return err
+	}
+	msg, err := mail.ReadMessage(bytes.NewReader(b))
 	if err != nil {
 		return err
 	}
 	s.msg = msg
-	s.rawMsg = b
+	s.rawMsg = bytes.NewReader(b)
 	for _, fn := range s.be.onReceiveFuncs {
-		msg, err := mail.ReadMessage(bytes.NewReader(b.Bytes()))
+		msg, err := mail.ReadMessage(bytes.NewReader(b))
 		if err != nil {
 			return err
 		}
