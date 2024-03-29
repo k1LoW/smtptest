@@ -60,14 +60,15 @@ func (s *Session) Logout() error {
 }
 
 func (s *Session) AuthMechanisms() []string {
+	if s.be.username == nil {
+		return nil
+	}
 	return []string{sasl.Plain}
 }
 
 func (s *Session) Auth(mech string) (sasl.Server, error) {
 	if s.be.username == nil {
-		return sasl.NewPlainServer(func(identity, username, password string) error {
-			return nil
-		}), nil
+		return nil, smtp.ErrAuthUnsupported
 	}
 	return sasl.NewPlainServer(func(identity, username, password string) error {
 		if identity != "" && identity != username {

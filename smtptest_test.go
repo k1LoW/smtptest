@@ -42,8 +42,7 @@ func TestServer(t *testing.T) {
 	})
 
 	addr := ts.Addr()
-	auth := smtp.PlainAuth("", "user@example.com", "password", ts.Host)
-	if err := smtp.SendMail(addr, auth, "sender@example.org", []string{"recipient@example.net"}, []byte(testMsg)); err != nil {
+	if err := smtp.SendMail(addr, nil, "sender@example.org", []string{"recipient@example.net"}, []byte(testMsg)); err != nil {
 		t.Fatal(err)
 	}
 
@@ -136,8 +135,7 @@ func TestServerMultipleRecipients(t *testing.T) {
 	})
 
 	addr := ts.Addr()
-	auth := smtp.PlainAuth("", "user@example.com", "password", ts.Host)
-	if err := smtp.SendMail(addr, auth, "sender@example.org", []string{"recipient@example.net", "another_recipient@example.net"}, []byte(testMsg)); err != nil {
+	if err := smtp.SendMail(addr, nil, "sender@example.org", []string{"recipient@example.net", "another_recipient@example.net"}, []byte(testMsg)); err != nil {
 		t.Fatal(err)
 	}
 
