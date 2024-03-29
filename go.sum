@@ -3,8 +3,8 @@ github.com/cention-sany/utf7 v0.0.0-20170124080048-26cad61bd60a/go.mod h1:2GxOXO
 github.com/emersion/go-sasl v0.0.0-20200509203442-7bfe0ed36a21/go.mod h1:iL2twTeMvZnrg54ZoPDNfJaJaqy0xIQFuBdrLsmspwQ=
 github.com/emersion/go-sasl v0.0.0-20211008083017-0b9dcfb154ac h1:tn/OQ2PmwQ0XFVgAHfjlLyqMewry25Rz7jWnVoh4Ggs=
 github.com/emersion/go-sasl v0.0.0-20211008083017-0b9dcfb154ac/go.mod h1:iL2twTeMvZnrg54ZoPDNfJaJaqy0xIQFuBdrLsmspwQ=
-github.com/emersion/go-smtp v0.15.1-0.20220315104156-8c3df8a6b249 h1:0HhOqEQp9GL2gz6sEJLT9Grn7Ef1Qx7sofJ5UAN96rQ=
-github.com/emersion/go-smtp v0.15.1-0.20220315104156-8c3df8a6b249/go.mod h1:qm27SGYgoIPRot6ubfQ/GpiPy/g3PaZAVRxiO/sDUgQ=
+github.com/emersion/go-smtp v0.21.0 h1:ZDZmX9aFUuPlD1lpoT0nC/nozZuIkSCyQIyxdijjCy0=
+github.com/emersion/go-smtp v0.21.0/go.mod h1:qm27SGYgoIPRot6ubfQ/GpiPy/g3PaZAVRxiO/sDUgQ=
 github.com/go-test/deep v1.0.7 h1:/VSMRlnY/JSyqxQUzQLKVMAskpY/NZKFA5j2P+0pP2M=
 github.com/go-test/deep v1.0.7/go.mod h1:QV8Hv/iy04NyLBxAdO9njL0iVPN1S4d/A3NVv1V36o8=
 github.com/gogs/chardet v0.0.0-20191104214054-4b6791f73a28 h1:gBeyun7mySAKWg7Fb0GOcv0upX9bdaZScs8QcRo8mEY=
