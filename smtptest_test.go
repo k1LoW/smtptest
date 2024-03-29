@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/jhillyerd/enmime"
+	"golang.org/x/sync/errgroup"
 )
 
 const testMsg = "To: recipient@example.net\r\n" +
@@ -162,5 +163,31 @@ func TestServerMultipleRecipients(t *testing.T) {
 		if got != want {
 			t.Errorf("got %v\nwant %v", got, want)
 		}
+	}
+}
+
+func TestServerParallel(t *testing.T) {
+	ts, err := NewServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		ts.Close()
+	})
+
+	addr := ts.Addr()
+
+	eg := new(errgroup.Group)
+	for i := 0; i < 100; i++ {
+		eg.Go(func() error {
+			return smtp.SendMail(addr, nil, "sender@example.org", []string{"recipient@example.net", "another_recipient@example.net"}, []byte(testMsg))
+		})
+	}
+	if err := eg.Wait(); err != nil {
+		t.Fatal(err)
+	}
+
+	if len(ts.Messages()) != 100 {
+		t.Errorf("got %v\nwant %v", len(ts.Messages()), 100)
 	}
 }

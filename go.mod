@@ -7,6 +7,7 @@ require (
 	github.com/emersion/go-smtp v0.21.0
 	github.com/google/uuid v1.3.0
 	github.com/jhillyerd/enmime v0.9.3
+	golang.org/x/sync v0.6.0
 )
 
 require (
