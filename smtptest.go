@@ -12,9 +12,12 @@ import (
 	"sync"
 	"time"
 
+	"github.com/emersion/go-sasl"
 	"github.com/emersion/go-smtp"
 	"github.com/google/uuid"
 )
+
+var _ smtp.AuthSession = (*Session)(nil)
 
 type onReceiveFunc func(from, to string, recipients []string, msg *mail.Message) error
 
@@ -26,9 +29,8 @@ type backend struct {
 	onReceiveFuncs []onReceiveFunc
 }
 
-func (be *backend) NewSession(state smtp.ConnectionState, _ string) (smtp.Session, error) {
+func (be *backend) NewSession(c *smtp.Conn) (smtp.Session, error) {
 	ses := &Session{
-		state:    &state,
 		username: be.username,
 		password: be.password,
 		be:       be,
@@ -45,7 +47,6 @@ type Session struct {
 	recipients []string
 	rawMsg     io.Reader
 	msg        *mail.Message
-	state      *smtp.ConnectionState
 	username   *string
 	password   *string
 	be         *backend
@@ -58,11 +59,25 @@ func (s *Session) Logout() error {
 	return nil
 }
 
-func (s *Session) AuthPlain(username, password string) error {
-	if s.username != nil && s.password != nil && (*s.username != username || *s.password != password) {
-		return errors.New("invalid username or password")
+func (s *Session) AuthMechanisms() []string {
+	return []string{sasl.Plain}
+}
+
+func (s *Session) Auth(mech string) (sasl.Server, error) {
+	if s.be.username == nil {
+		return sasl.NewPlainServer(func(identity, username, password string) error {
+			return nil
+		}), nil
 	}
-	return nil
+	return sasl.NewPlainServer(func(identity, username, password string) error {
+		if identity != "" && identity != username {
+			return errors.New("Invalid identity")
+		}
+		if username != *s.be.username || password != *s.be.password {
+			return errors.New("Invalid username or password")
+		}
+		return nil
+	}), nil
 }
 
 func (s *Session) Mail(from string, opts *smtp.MailOptions) error {
@@ -70,7 +85,7 @@ func (s *Session) Mail(from string, opts *smtp.MailOptions) error {
 	return nil
 }
 
-func (s *Session) Rcpt(to string) error {
+func (s *Session) Rcpt(to string, opts *smtp.RcptOptions) error {
 	s.to = to
 	s.recipients = append(s.recipients, to)
 	return nil
