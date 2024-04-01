@@ -13,7 +13,6 @@ lint:
 depsdev:
 	go install github.com/Songmu/ghch/cmd/ghch@latest
 	go install github.com/Songmu/gocredits/cmd/gocredits@latest
-	go install github.com/securego/gosec/v2/cmd/gosec@latest
 
 prerelease:
 	git pull origin main --tag
@@ -24,6 +23,11 @@ prerelease:
 	git add CHANGELOG.md CREDITS go.mod go.sum
 	git commit -m'Bump up version number'
 	git tag ${VER}
+
+prerelease_for_tagpr: depsdev
+	gocredits -w .
+	cat _EXTRA_CREDITS >> CREDITS
+	git add CHANGELOG.md CREDITS go.mod go.sum
 
 release:
 	git push origin main --tag
