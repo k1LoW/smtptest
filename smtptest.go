@@ -87,7 +87,9 @@ func (s *Session) Mail(from string, opts *smtp.MailOptions) error {
 }
 
 func (s *Session) Rcpt(to string, opts *smtp.RcptOptions) error {
-	s.to = to
+	if s.to == "" {
+		s.to = to
+	}
 	s.recipients = append(s.recipients, to)
 	return nil
 }

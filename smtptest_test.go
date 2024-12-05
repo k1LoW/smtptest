@@ -17,17 +17,17 @@ const testMsg = "To: recipient@example.net\r\n" +
 	"This is the email body.\r\n"
 
 func TestServer(t *testing.T) {
-	ts, err := NewServer()
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Cleanup(func() {
-		ts.Close()
-	})
-	ts.OnReceive(func(from, to string, recipients []string, msg *mail.Message) error {
+	ts, err := NewServer(WithOnReceiveFunc(func(from, to string, recipients []string, msg *mail.Message) error {
 		{
 			got := from
 			want := "sender@example.org"
+			if got != want {
+				t.Errorf("got %v\nwant %v", got, want)
+			}
+		}
+		{
+			got := to
+			want := "recipient@example.net"
 			if got != want {
 				t.Errorf("got %v\nwant %v", got, want)
 			}
@@ -40,6 +40,12 @@ func TestServer(t *testing.T) {
 			}
 		}
 		return nil
+	}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		ts.Close()
 	})
 
 	addr := ts.Addr()
@@ -127,7 +133,23 @@ func TestServerWithAuth(t *testing.T) {
 }
 
 func TestServerMultipleRecipients(t *testing.T) {
-	ts, err := NewServer()
+	ts, err := NewServer(WithOnReceiveFunc(func(from, to string, recipients []string, msg *mail.Message) error {
+		{
+			got := from
+			want := "sender@example.org"
+			if got != want {
+				t.Errorf("got %v\nwant %v", got, want)
+			}
+		}
+		{
+			got := to
+			want := "recipient@example.net"
+			if got != want {
+				t.Errorf("got %v\nwant %v", got, want)
+			}
+		}
+		return nil
+	}))
 	if err != nil {
 		t.Fatal(err)
 	}
