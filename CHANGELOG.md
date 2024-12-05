@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.10.0](https://github.com/k1LoW/smtptest/compare/v0.9.1...v0.10.0) - 2024-12-05
+- Setup tagpr by @k1LoW in https://github.com/k1LoW/smtptest/pull/21
+- Bump golang.org/x/net from 0.17.0 to 0.23.0 by @dependabot in https://github.com/k1LoW/smtptest/pull/23
+- Support options with NewServerWithAuth. by @k1LoW in https://github.com/k1LoW/smtptest/pull/24
+- `to` in WithOnReceiveFunc is the first email address. by @k1LoW in https://github.com/k1LoW/smtptest/pull/25
+
 ## [v0.8.0](https://github.com/k1LoW/smtptest/compare/v0.7.0...v0.8.0) (2024-02-22)
 
 * Add OnReceive to register a function that fires when email is received [#14](https://github.com/k1LoW/smtptest/pull/14) ([k1LoW](https://github.com/k1LoW))
@@ -42,4 +48,3 @@
 * Add Addr() [#1](https://github.com/k1LoW/smtptest/pull/1) ([k1LoW](https://github.com/k1LoW))
 
 ## [v0.1.0](https://github.com/k1LoW/smtptest/compare/99b335d149af...v0.1.0) (2022-04-11)
-
