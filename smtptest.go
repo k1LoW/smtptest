@@ -177,13 +177,26 @@ func NewServer(opts ...Option) (*Server, error) {
 	return newServer(be)
 }
 
-func NewServerWithAuth() (*Server, netsmtp.Auth, error) {
-	username := fmt.Sprintf("%s@example.com", uuid.NewString())
-	password := uuid.NewString()
-	s, err := newServer(&backend{
-		username: &username,
-		password: &password,
-	})
+func NewServerWithAuth(opts ...Option) (*Server, netsmtp.Auth, error) {
+	be := &backend{}
+	for _, opt := range opts {
+		if err := opt(be); err != nil {
+			return nil, nil, err
+		}
+	}
+	var username, password string
+	if be.username == nil || be.password == nil {
+		username = fmt.Sprintf("%s@example.com", uuid.NewString())
+		password = uuid.NewString()
+		opt := WithPlainAuth(username, password)
+		if err := opt(be); err != nil {
+			return nil, nil, err
+		}
+	} else {
+		username = *be.username
+		password = *be.password
+	}
+	s, err := newServer(be)
 	if err != nil {
 		return nil, nil, err
 	}
