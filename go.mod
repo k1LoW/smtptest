@@ -1,11 +1,11 @@
 module github.com/k1LoW/smtptest
 
-go 1.17
+go 1.22
 
 require (
-	github.com/emersion/go-sasl v0.0.0-20211008083017-0b9dcfb154ac
-	github.com/emersion/go-smtp v0.21.0
-	github.com/google/uuid v1.3.0
+	github.com/emersion/go-sasl v0.0.0-20241020182733-b788ff22d5a6
+	github.com/emersion/go-smtp v0.21.3
+	github.com/google/uuid v1.6.0
 	github.com/jhillyerd/enmime v0.9.3
 	golang.org/x/sync v0.6.0
 )
