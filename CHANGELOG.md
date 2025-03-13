@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.10.1](https://github.com/k1LoW/smtptest/compare/v0.10.0...v0.10.1) - 2025-03-13
+
 ## [v0.10.0](https://github.com/k1LoW/smtptest/compare/v0.9.1...v0.10.0) - 2024-12-05
 - Setup tagpr by @k1LoW in https://github.com/k1LoW/smtptest/pull/21
 - Bump golang.org/x/net from 0.17.0 to 0.23.0 by @dependabot in https://github.com/k1LoW/smtptest/pull/23
