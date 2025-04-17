@@ -7,7 +7,7 @@ require (
 	github.com/emersion/go-smtp v0.21.3
 	github.com/google/uuid v1.6.0
 	github.com/jhillyerd/enmime v0.9.3
-	golang.org/x/sync v0.11.0
+	golang.org/x/sync v0.12.0
 )
 
 require (
@@ -19,6 +19,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	golang.org/x/net v0.36.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 )
