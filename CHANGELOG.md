@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.10.3](https://github.com/k1LoW/smtptest/compare/v0.10.2...v0.10.3) - 2026-07-03
+
+- chore: setup tagpr labels by @k1LoW in https://github.com/k1LoW/smtptest/pull/30
+- Revert "chore: setup tagpr labels" by @k1LoW in https://github.com/k1LoW/smtptest/pull/32
+- chore: setup tagpr labels by @k1LoW in https://github.com/k1LoW/smtptest/pull/33
+- Bump golang.org/x/net from 0.38.0 to 0.55.0 by @dependabot[bot] in https://github.com/k1LoW/smtptest/pull/34
+
 ## [v0.10.2](https://github.com/k1LoW/smtptest/compare/v0.10.1...v0.10.2) - 2025-04-17
 - Bump golang.org/x/net from 0.36.0 to 0.38.0 by @dependabot in https://github.com/k1LoW/smtptest/pull/28
 
