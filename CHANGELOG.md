@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.10.4](https://github.com/k1LoW/smtptest/compare/v0.10.3...v0.10.4) - 2026-09-28
+
+- ci: generate CREDITS with gocredits v1.0.0 from a make target by @k1LoW in https://github.com/k1LoW/smtptest/pull/35
+
 ## [v0.10.3](https://github.com/k1LoW/smtptest/compare/v0.10.2...v0.10.3) - 2026-07-03
 
 - chore: setup tagpr labels by @k1LoW in https://github.com/k1LoW/smtptest/pull/30
